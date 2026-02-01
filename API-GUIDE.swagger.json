@@ -1,0 +1,2050 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SHSY Staking Platform API",
+    "description": "A comprehensive API for the SHSY Staking Platform featuring staking operations, global challenges, trivia system, and Million SHSY Pool on Solana devnet.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "SHSY Staking Platform Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://your-production-domain.com",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Platform",
+      "description": "Platform-wide statistics and information"
+    },
+    {
+      "name": "Staking",
+      "description": "Core staking operations"
+    },
+    {
+      "name": "DApp",
+      "description": "DApp-specific endpoints for wallet and staking operations"
+    },
+    {
+      "name": "Challenges",
+      "description": "Global challenge system APIs"
+    },
+    {
+      "name": "Million Pool",
+      "description": "Million SHSY Pool participation and prizes"
+    },
+    {
+      "name": "Trivia",
+      "description": "Trivia riddle system"
+    },
+    {
+      "name": "Fund Locking",
+      "description": "Locked funds management"
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative endpoints"
+    }
+  ],
+  "paths": {
+    "/api/stats": {
+      "get": {
+        "tags": ["Platform"],
+        "summary": "Get platform statistics",
+        "description": "Retrieve platform-wide statistics including total users, active stakes, total staked amount, and rewards.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pools": {
+      "get": {
+        "tags": ["Staking"],
+        "summary": "Get staking pools",
+        "description": "Retrieve available staking pools with their configurations.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/balance/{wallet}": {
+      "get": {
+        "tags": ["DApp"],
+        "summary": "Get wallet token balance",
+        "description": "Get SHSY token balance for a specific wallet address.",
+        "parameters": [
+          {
+            "name": "wallet",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Solana wallet address"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/connect": {
+      "post": {
+        "tags": ["DApp"],
+        "summary": "Connect wallet",
+        "description": "Connect wallet and create/update user record.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectWalletRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectWalletResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/stake": {
+      "post": {
+        "tags": ["DApp"],
+        "summary": "Create staking transaction",
+        "description": "Create staking transaction with automatic challenge enrollment.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StakeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StakeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/withdraw": {
+      "post": {
+        "tags": ["DApp"],
+        "summary": "Process stake withdrawal",
+        "description": "Process stake withdrawal with APY rewards using PDA-based distribution.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithdrawResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/stakes/{wallet}": {
+      "get": {
+        "tags": ["DApp"],
+        "summary": "Get user stakes",
+        "description": "Get all stakes for a wallet address with calculated rewards.",
+        "parameters": [
+          {
+            "name": "wallet",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Solana wallet address"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StakesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/leaderboard": {
+      "get": {
+        "tags": ["DApp"],
+        "summary": "Get staking leaderboard",
+        "description": "Get staking leaderboard with top performers.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/challenges/{wallet}": {
+      "get": {
+        "tags": ["Challenges"],
+        "summary": "Get user challenges",
+        "description": "Get active global challenges for a wallet.",
+        "parameters": [
+          {
+            "name": "wallet",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Solana wallet address"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChallengesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/challenges/claim": {
+      "post": {
+        "tags": ["Challenges"],
+        "summary": "Claim challenge rewards",
+        "description": "Claim completed challenge rewards with fund locking.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimChallengeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimChallengeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/million-pool/deposit": {
+      "post": {
+        "tags": ["Million Pool"],
+        "summary": "USDT deposit for Million Pool",
+        "description": "Create USDT deposit transaction for Million SHSY Pool entry.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MillionPoolDepositRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MillionPoolDepositResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/million-pool/claim": {
+      "post": {
+        "tags": ["Million Pool"],
+        "summary": "Claim Million Pool prize",
+        "description": "Claim Million SHSY Pool prize with fund locking.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MillionPoolClaimRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MillionPoolClaimResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/riddles/submit": {
+      "post": {
+        "tags": ["Trivia"],
+        "summary": "Submit trivia answer",
+        "description": "Submit answer to active trivia question with automatic reward distribution.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiddleSubmitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiddleSubmitResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/locked-funds/{wallet}": {
+      "get": {
+        "tags": ["Fund Locking"],
+        "summary": "Get locked funds",
+        "description": "Get all locked funds for a wallet address.",
+        "parameters": [
+          {
+            "name": "wallet",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Solana wallet address"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockedFundsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dapp/locked-funds/withdraw": {
+      "post": {
+        "tags": ["Fund Locking"],
+        "summary": "Withdraw unlocked funds",
+        "description": "Withdraw funds that have completed their lock period.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockFundsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockFundsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stake": {
+      "post": {
+        "tags": ["Staking"],
+        "summary": "Create simplified stake",
+        "description": "Create simplified staking transaction using deployed contract.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimplifiedStakeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplifiedStakeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/withdraw": {
+      "post": {
+        "tags": ["Staking"],
+        "summary": "Create simplified withdrawal",
+        "description": "Create simplified withdrawal transaction using deployed contract.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimplifiedWithdrawRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplifiedWithdrawResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/confirm-transaction": {
+      "post": {
+        "tags": ["Staking"],
+        "summary": "Confirm blockchain transaction",
+        "description": "Confirm and record blockchain transaction in database.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stakes/{walletAddress}": {
+      "get": {
+        "tags": ["Staking"],
+        "summary": "Get user stakes (legacy)",
+        "description": "Get all stakes for a wallet address with calculated rewards (legacy endpoint).",
+        "parameters": [
+          {
+            "name": "walletAddress",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Solana wallet address"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StakesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rewards/distribute-riddle": {
+      "post": {
+        "tags": ["Trivia"],
+        "summary": "Distribute riddle rewards",
+        "description": "Create PDA-based reward distribution for riddle participation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DistributeRiddleRewardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DistributeRiddleRewardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/debug-pool-admin": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Debug pool admin",
+        "description": "Get diagnostic information about staking pool admin configuration.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolAdminDebugResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/riddles": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get all riddles",
+        "description": "Get all riddles for admin management.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminRiddlesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Create new riddle",
+        "description": "Create new trivia riddle for the platform.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRiddleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRiddleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/riddles/{id}": {
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Update riddle",
+        "description": "Update existing riddle.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Riddle ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRiddleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Admin"],
+        "summary": "Delete riddle",
+        "description": "Delete riddle permanently.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Riddle ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/admin/riddles/{id}/status": {
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Update riddle status",
+        "description": "Activate or deactivate riddle.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Riddle ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRiddleStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/admin/reward-settings": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get reward settings",
+        "description": "Get all configurable reward settings.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Update reward settings",
+        "description": "Update platform reward settings.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRewardSettingsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/admin/lock-settings": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get lock settings",
+        "description": "Get fund locking configuration.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/million-pool/settings": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get Million Pool settings",
+        "description": "Get Million SHSY Pool configuration.",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Update Million Pool settings",
+        "description": "Update Million SHSY Pool settings.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMillionPoolSettingsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "totalUsers": {
+                "type": "string",
+                "example": "6"
+              },
+              "activeStakes": {
+                "type": "string",
+                "example": "23"
+              },
+              "totalStaked": {
+                "type": "string",
+                "example": "40005.92000000"
+              },
+              "totalRewards": {
+                "type": "string",
+                "example": "0"
+              }
+            }
+          }
+        }
+      },
+      "PoolsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "pools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pool"
+            }
+          }
+        }
+      },
+      "Pool": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Pool 1"
+          },
+          "apyRate": {
+            "type": "number",
+            "example": 5
+          },
+          "lockPeriodDays": {
+            "type": "integer",
+            "example": 30
+          }
+        }
+      },
+      "BalanceResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "balance": {
+            "type": "string",
+            "example": "1527.375015"
+          },
+          "formattedBalance": {
+            "type": "string",
+            "example": "1,527.38 SHSY"
+          }
+        }
+      },
+      "ConnectWalletRequest": {
+        "type": "object",
+        "required": ["walletAddress"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          }
+        }
+      },
+      "ConnectWalletResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Wallet connected successfully"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 17
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-07-05T17:26:10.342Z"
+          }
+        }
+      },
+      "StakeRequest": {
+        "type": "object",
+        "required": ["walletAddress", "amount", "poolId"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "amount": {
+            "type": "number",
+            "example": 100
+          },
+          "poolId": {
+            "type": "integer",
+            "example": 0,
+            "description": "Pool 0: 30-day (5% APY), Pool 1: 90-day (6% APY), Pool 2: 180-day (7% APY)"
+          }
+        }
+      },
+      "StakeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "transaction": {
+            "type": "object",
+            "properties": {
+              "serializedTransaction": {
+                "type": "string",
+                "description": "Base64-encoded transaction"
+              },
+              "programId": {
+                "type": "string",
+                "example": "7GKL6U2Rh3PzGNPpeN7PdQNucSCg2HJMa41EqR9qVeBm"
+              },
+              "instructionData": {
+                "type": "string",
+                "description": "Hex-encoded instruction"
+              }
+            }
+          },
+          "stakeDetails": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "example": "100.00000000"
+              },
+              "lockPeriod": {
+                "type": "integer",
+                "example": 30
+              },
+              "apyRate": {
+                "type": "string",
+                "example": "5.0"
+              },
+              "expectedRewards": {
+                "type": "string",
+                "example": "13.70"
+              }
+            }
+          }
+        }
+      },
+      "WithdrawRequest": {
+        "type": "object",
+        "required": ["walletAddress", "id"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "id": {
+            "type": "integer",
+            "example": 25,
+            "description": "Stake ID to withdraw"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Transaction signature for completion (optional)"
+          }
+        }
+      },
+      "WithdrawResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "completed": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Withdrawal completed automatically! Tokens sent to your wallet."
+          },
+          "transactionSignature": {
+            "type": "string"
+          },
+          "principal": {
+            "type": "string",
+            "example": "100.00000000"
+          },
+          "rewards": {
+            "type": "string",
+            "example": "6.00000000"
+          },
+          "totalAmount": {
+            "type": "string",
+            "example": "106.00000000"
+          }
+        }
+      },
+      "StakesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "stakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Stake"
+            }
+          }
+        }
+      },
+      "Stake": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 25
+          },
+          "amount": {
+            "type": "string",
+            "example": "100.00000000"
+          },
+          "lockPeriodDays": {
+            "type": "integer",
+            "example": 30
+          },
+          "apyRate": {
+            "type": "string",
+            "example": "5.0"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": ["active", "withdrawn", "locked"]
+          },
+          "pendingRewards": {
+            "type": "string",
+            "example": "2.15068493"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-07-05T17:00:00.000Z"
+          },
+          "lockedUntil": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-08-04T17:00:00.000Z"
+          },
+          "transactionSignature": {
+            "type": "string"
+          }
+        }
+      },
+      "LeaderboardResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "leaderboard": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardEntry"
+            }
+          }
+        }
+      },
+      "LeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "example": 1
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "8fMsU4gjaPB9sUNSQFiDu6Tf7oaQRrLYnREZkEidW6vQ"
+          },
+          "totalStaked": {
+            "type": "string",
+            "example": "26005.92000000"
+          },
+          "activeStakes": {
+            "type": "integer",
+            "example": 12
+          }
+        }
+      },
+      "ChallengesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Challenge"
+            }
+          }
+        }
+      },
+      "Challenge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "challengeType": {
+            "type": "string",
+            "example": "10_day",
+            "enum": ["10_day", "30_day"]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-07-05T17:26:10.342Z"
+          },
+          "targetMinutes": {
+            "type": "integer",
+            "example": 14400
+          },
+          "rewardAmount": {
+            "type": "string",
+            "example": "25.00000000"
+          },
+          "status": {
+            "type": "string",
+            "example": "active"
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "elapsedMinutes": {
+                "type": "integer",
+                "example": 120
+              },
+              "targetMinutes": {
+                "type": "integer",
+                "example": 14400
+              },
+              "progressPercentage": {
+                "type": "number",
+                "example": 0.83
+              },
+              "isCompleted": {
+                "type": "boolean",
+                "example": false
+              },
+              "canClaim": {
+                "type": "boolean",
+                "example": false
+              }
+            }
+          },
+          "participantCount": {
+            "type": "integer",
+            "example": 1
+          },
+          "isParticipating": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "ClaimChallengeRequest": {
+        "type": "object",
+        "required": ["challengeType", "walletAddress"],
+        "properties": {
+          "challengeType": {
+            "type": "string",
+            "example": "10_day",
+            "enum": ["10_day", "30_day"]
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          }
+        }
+      },
+      "ClaimChallengeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "claimResult": {
+            "type": "object",
+            "properties": {
+              "totalReward": {
+                "type": "string",
+                "example": "25.00000000"
+              },
+              "immediateWithdrawal": {
+                "type": "string",
+                "example": "18.75000000"
+              },
+              "lockedAmount": {
+                "type": "string",
+                "example": "6.25000000"
+              },
+              "lockDuration": {
+                "type": "integer",
+                "example": 30
+              },
+              "transaction": {
+                "type": "object",
+                "properties": {
+                  "serializedTransaction": {
+                    "type": "string",
+                    "description": "Base64-encoded transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MillionPoolDepositRequest": {
+        "type": "object",
+        "required": ["walletAddress", "amount"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "amount": {
+            "type": "number",
+            "example": 4,
+            "description": "USDT amount for Million Pool entry"
+          }
+        }
+      },
+      "MillionPoolDepositResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "transaction": {
+            "type": "object",
+            "properties": {
+              "serializedTransaction": {
+                "type": "string",
+                "description": "Base64-encoded transaction"
+              },
+              "depositAmount": {
+                "type": "string",
+                "example": "4.000000"
+              },
+              "targetWallet": {
+                "type": "string",
+                "example": "4fNiVj8NNSYLM8nJtN2CXjCfKrNKAyNqFCMteBbdwj8G"
+              }
+            }
+          }
+        }
+      },
+      "MillionPoolClaimRequest": {
+        "type": "object",
+        "required": ["winnerId", "walletAddress"],
+        "properties": {
+          "winnerId": {
+            "type": "integer",
+            "example": 15
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          }
+        }
+      },
+      "MillionPoolClaimResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "claimResult": {
+            "type": "object",
+            "properties": {
+              "totalPrize": {
+                "type": "string",
+                "example": "35.00000000"
+              },
+              "immediateWithdrawal": {
+                "type": "string",
+                "example": "26.25000000"
+              },
+              "lockedAmount": {
+                "type": "string",
+                "example": "8.75000000"
+              },
+              "lockDuration": {
+                "type": "integer",
+                "example": 30
+              },
+              "transaction": {
+                "type": "object",
+                "properties": {
+                  "serializedTransaction": {
+                    "type": "string",
+                    "description": "Base64-encoded transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RiddleSubmitRequest": {
+        "type": "object",
+        "required": ["riddleId", "answer", "walletAddress"],
+        "properties": {
+          "riddleId": {
+            "type": "integer",
+            "example": 1
+          },
+          "answer": {
+            "type": "string",
+            "example": "21 million"
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          }
+        }
+      },
+      "RiddleSubmitResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "submission": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 25
+              },
+              "isCorrect": {
+                "type": "boolean",
+                "example": true
+              },
+              "rewardEarned": {
+                "type": "string",
+                "example": "10.00000000"
+              },
+              "submittedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-07-05T18:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "LockedFundsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "lockedFunds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LockedFund"
+            }
+          }
+        }
+      },
+      "LockedFund": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 5
+          },
+          "amount": {
+            "type": "string",
+            "example": "6.25000000"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "SHSY"
+          },
+          "lockedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-07-05T18:00:00.000Z"
+          },
+          "unlocksAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-08-04T18:00:00.000Z"
+          },
+          "status": {
+            "type": "string",
+            "example": "locked",
+            "enum": ["locked", "unlocked", "withdrawn"]
+          },
+          "rewardType": {
+            "type": "string",
+            "example": "challenge_10d"
+          }
+        }
+      },
+      "UnlockFundsRequest": {
+        "type": "object",
+        "required": ["lockedFundId", "walletAddress"],
+        "properties": {
+          "lockedFundId": {
+            "type": "integer",
+            "example": 5
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          }
+        }
+      },
+      "UnlockFundsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "withdrawal": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "example": "6.25000000"
+              },
+              "tokenType": {
+                "type": "string",
+                "example": "SHSY"
+              },
+              "transaction": {
+                "type": "object",
+                "properties": {
+                  "serializedTransaction": {
+                    "type": "string",
+                    "description": "Base64-encoded transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SimplifiedStakeRequest": {
+        "type": "object",
+        "required": ["walletAddress", "amount", "lockPeriod"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "amount": {
+            "type": "number",
+            "example": 100
+          },
+          "lockPeriod": {
+            "type": "integer",
+            "example": 30,
+            "enum": [30, 90, 180],
+            "description": "Lock period in days"
+          }
+        }
+      },
+      "SimplifiedStakeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "transactionData": {
+            "type": "object",
+            "properties": {
+              "serializedTransaction": {
+                "type": "string",
+                "description": "Base64-encoded transaction"
+              },
+              "programId": {
+                "type": "string"
+              },
+              "instructions": {
+                "type": "string",
+                "description": "Hex-encoded instruction data"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Simplified stake transaction created successfully"
+          }
+        }
+      },
+      "SimplifiedWithdrawRequest": {
+        "type": "object",
+        "required": ["walletAddress", "stakeIndex"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "stakeIndex": {
+            "type": "integer",
+            "example": 0,
+            "description": "Index of the stake to withdraw"
+          }
+        }
+      },
+      "SimplifiedWithdrawResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "transactionData": {
+            "type": "object",
+            "properties": {
+              "serializedTransaction": {
+                "type": "string",
+                "description": "Base64-encoded transaction"
+              },
+              "programId": {
+                "type": "string"
+              },
+              "instructions": {
+                "type": "string",
+                "description": "Hex-encoded instruction data"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Withdraw transaction created successfully"
+          }
+        }
+      },
+      "ConfirmTransactionRequest": {
+        "type": "object",
+        "required": ["signature", "walletAddress", "transactionType"],
+        "properties": {
+          "signature": {
+            "type": "string",
+            "description": "Blockchain transaction signature"
+          },
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "transactionType": {
+            "type": "string",
+            "example": "stake",
+            "enum": ["stake", "withdraw"]
+          },
+          "amount": {
+            "type": "number",
+            "description": "Required for stake transactions"
+          },
+          "lockPeriod": {
+            "type": "integer",
+            "description": "Required for stake transactions"
+          }
+        }
+      },
+      "ConfirmTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "confirmed": {
+            "type": "boolean",
+            "example": true
+          },
+          "signature": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "example": "Transaction confirmed and recorded successfully"
+          },
+          "stakeId": {
+            "type": "integer",
+            "description": "Returned for stake transactions"
+          }
+        }
+      },
+      "DistributeRiddleRewardRequest": {
+        "type": "object",
+        "required": ["walletAddress", "riddleId", "rewardAmount"],
+        "properties": {
+          "walletAddress": {
+            "type": "string",
+            "example": "C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "riddleId": {
+            "type": "integer",
+            "example": 1
+          },
+          "rewardAmount": {
+            "type": "string",
+            "example": "10.00000000"
+          },
+          "rewardType": {
+            "type": "string",
+            "example": "riddle_answer_free",
+            "default": "riddle_answer_free"
+          }
+        }
+      },
+      "DistributeRiddleRewardResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "signature": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "example": "Riddle reward of 10.00000000 SHSY distributed to C73nuwe78M2N9f62YJDysZYwPX1TcRZjrsE1KSJHW8w2"
+          },
+          "instructionData": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "example": "PDA-based reward distribution"
+              },
+              "amount": {
+                "type": "string",
+                "example": "10.00000000"
+              },
+              "recipient": {
+                "type": "string"
+              },
+              "rewardType": {
+                "type": "string"
+              },
+              "transactionSignature": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PoolAdminDebugResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "poolAdmin": {
+            "type": "string",
+            "description": "Current pool admin public key"
+          },
+          "currentAdmin": {
+            "type": "string",
+            "description": "System admin public key"
+          },
+          "isMatch": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether pool admin matches system admin"
+          },
+          "poolAddress": {
+            "type": "string",
+            "description": "Staking pool PDA address"
+          }
+        }
+      },
+      "AdminRiddlesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "riddles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Riddle"
+            }
+          }
+        }
+      },
+      "Riddle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "question": {
+            "type": "string",
+            "example": "What is the maximum supply of Bitcoin?"
+          },
+          "hint": {
+            "type": "string",
+            "example": "It's a round number in millions"
+          },
+          "correctAnswer": {
+            "type": "string",
+            "example": "21 million"
+          },
+          "rewardAmount": {
+            "type": "string",
+            "example": "10.00000000"
+          },
+          "status": {
+            "type": "string",
+            "example": "published",
+            "enum": ["draft", "published", "inactive"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateRiddleRequest": {
+        "type": "object",
+        "required": ["question", "hint", "correctAnswer", "rewardAmount"],
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "What consensus mechanism does Bitcoin use?"
+          },
+          "hint": {
+            "type": "string",
+            "example": "It requires significant computational power"
+          },
+          "correctAnswer": {
+            "type": "string",
+            "example": "Proof of Work"
+          },
+          "rewardAmount": {
+            "type": "string",
+            "example": "10.00000000"
+          }
+        }
+      },
+      "CreateRiddleResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "riddle": {
+            "$ref": "#/components/schemas/Riddle"
+          }
+        }
+      },
+      "UpdateRiddleRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          },
+          "correctAnswer": {
+            "type": "string"
+          },
+          "rewardAmount": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateRiddleStatusRequest": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "published",
+            "enum": ["draft", "published", "inactive"]
+          }
+        }
+      },
+      "RewardSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "participation_10d": {
+                "type": "string",
+                "example": "25"
+              },
+              "participation_30d": {
+                "type": "string",
+                "example": "45"
+              },
+              "million_pool_reward": {
+                "type": "string",
+                "example": "35"
+              },
+              "riddle_base_reward": {
+                "type": "string",
+                "example": "10"
+              }
+            }
+          }
+        }
+      },
+      "UpdateRewardSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "participation_10d": {
+            "type": "string",
+            "example": "30"
+          },
+          "participation_30d": {
+            "type": "string",
+            "example": "50"
+          }
+        }
+      },
+      "LockSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "lock_percentage": {
+                "type": "string",
+                "example": "25"
+              },
+              "lock_duration_days": {
+                "type": "string",
+                "example": "30"
+              }
+            }
+          }
+        }
+      },
+      "UpdateMillionPoolSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "rewardAmountShsy": {
+            "type": "string",
+            "example": "35.00000000"
+          },
+          "distributionFrequencyMinutes": {
+            "type": "integer",
+            "example": 1
+          },
+          "maxWinnersPerDistribution": {
+            "type": "integer",
+            "example": 3
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "description": "Error description"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional error context"
+          }
+        }
+      }
+    },
+    "securitySchemes": {},
+    "responses": {
+      "400": {
+        "description": "Bad Request - Validation errors or missing required fields",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Resource doesn't exist",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "SHSY Staking Platform Documentation",
+    "url": "https://github.com/your-repo/shsy-staking-platform"
+  }
+}

@@ -1,0 +1,3045 @@
+<!--
+ * SHSY-RB-2025-Team1
+-->
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SHSY - Dashboard</title>
+        <link
+            rel="icon"
+            href="https://shsycoin.com/wp-content/uploads/2025/04/cropped-200x200-1-32x32.gif"
+            sizes="32x32"
+        />
+        <link
+            rel="icon"
+            href="https://shsycoin.com/wp-content/uploads/2025/04/cropped-200x200-1-192x192.gif"
+            sizes="192x192"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="https://shsycoin.com/wp-content/uploads/2025/04/cropped-200x200-1-180x180.gif"
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: linear-gradient(135deg, #d1e7fb 0%, #dffdff 100%);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    Roboto, sans-serif;
+            }
+
+            .header {
+                background: linear-gradient(
+                    135deg,
+                    #00ddeb 0%,
+                    #046bd2 50%,
+                    #00ddeb 100%
+                );
+                padding: 16px 24px;
+                border-bottom: 1px solid #00ddeb;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .header-title {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: white;
+                font-weight: 600;
+                font-size: 18px;
+            }
+
+            .wallet-section {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .connect-btn {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+
+            .connect-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-1px);
+            }
+
+            .disconnect-btn {
+                background: rgba(255, 255, 255, 0.1);
+                color: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                margin-left: 8px;
+                transition: all 0.2s ease;
+            }
+
+            .disconnect-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .wallet-info {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+            }
+
+            .success-banner {
+                background: linear-gradient(135deg, #00ddeb, #046bd2);
+                color: white;
+                padding: 16px 24px;
+                margin: 16px 24px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .banner-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .banner-close {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                color: white;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            }
+
+            .banner-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
+
+            .banner-hidden {
+                transform: translateY(-100%);
+                opacity: 0;
+                margin: 0;
+                padding: 0;
+                height: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                padding: 24px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .welcome-section {
+                margin-bottom: 32px;
+            }
+
+            .welcome-title {
+                font-size: 24px;
+                font-weight: 700;
+                color: #1e293b;
+                margin-bottom: 8px;
+            }
+
+            .welcome-subtitle {
+                color: #64748b;
+                font-size: 16px;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-bottom: 32px;
+            }
+
+            .stat-card {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 12px;
+                padding: 24px;
+                border-left: 4px solid #00ddeb;
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.15);
+                backdrop-filter: blur(10px);
+            }
+
+            .stat-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 16px;
+                color: #64748b;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .stat-value {
+                font-size: 28px;
+                font-weight: 700;
+                color: #1e293b;
+                margin-bottom: 8px;
+            }
+
+            .stat-details {
+                color: #64748b;
+                font-size: 13px;
+            }
+
+            .two-column-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                margin-bottom: 32px;
+            }
+
+            .card {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.15);
+                backdrop-filter: blur(10px);
+            }
+
+            .card-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 20px;
+                font-weight: 600;
+                color: #1e293b;
+            }
+
+            .question-text {
+                font-size: 16px;
+                color: #1e293b;
+                margin-bottom: 16px;
+            }
+
+            .option {
+                display: block;
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 8px;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                background: white;
+                text-align: left;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 14px;
+            }
+
+            .option:hover {
+                border-color: #00ddeb;
+                background: #f0fdfa;
+            }
+
+            .option.selected {
+                border-color: #00ddeb;
+                background: #f0fdfa;
+            }
+
+            .submit-btn {
+                background: #00ddeb;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 16px;
+            }
+
+            .submit-btn:disabled {
+                background: #94a3b8;
+                cursor: not-allowed;
+            }
+
+            .hint {
+                background: rgba(0, 196, 180, 0.1);
+                border: 1px solid #00ddeb;
+                color: #00ddeb;
+                padding: 12px;
+                border-radius: 6px;
+                font-size: 13px;
+                margin-top: 16px;
+            }
+
+            .staking-info {
+                background: rgba(0, 196, 180, 0.15);
+                padding: 12px;
+                border-radius: 6px;
+                margin-bottom: 16px;
+                font-size: 13px;
+                color: #00838f;
+                text-align: center;
+            }
+
+            .apy-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .apy-label {
+                color: #64748b;
+                font-size: 14px;
+            }
+
+            .apy-value {
+                color: #059669;
+                font-weight: 600;
+            }
+
+            .lock-period {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .stake-btn {
+                background: #00ddeb;
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            .withdraw-btn {
+                background: #046bd2;
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            .million-btn {
+                background: #00ddeb;
+                color: white;
+                border: none;
+                padding: 16px;
+                border-radius: 8px;
+                font-weight: bold;
+                cursor: pointer;
+                width: 100%;
+                margin-bottom: 16px;
+                transition: all 0.3s ease;
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.3);
+            }
+
+            .million-btn:hover {
+                background: #046bd2;
+                transform: scale(1.1);
+                box-shadow: 0 0 30px rgba(0, 221, 235, 0.8);
+            }
+
+            .prize-info {
+                font-size: 12px;
+                color: #64748b;
+                text-align: center;
+                line-height: 1.4;
+            }
+
+            .progress-section {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.15);
+                backdrop-filter: blur(10px);
+            }
+
+            .progress-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 24px;
+                font-weight: 600;
+                color: #1e293b;
+            }
+
+            .progress-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            .progress-item {
+                text-align: center;
+            }
+
+            .progress-title {
+                font-size: 14px;
+                color: #64748b;
+                margin-bottom: 12px;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 8px;
+                background: #e2e8f0;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-bottom: 8px;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: #00ddeb;
+                width: 70%;
+            }
+
+            .progress-status {
+                font-size: 12px;
+                color: #64748b;
+            }
+
+            .wallet-connect-prompt {
+                background: rgba(0, 221, 235, 0.1);
+                border: 2px dashed #00ddeb;
+                border-radius: 8px;
+                padding: 24px;
+                text-align: center;
+                color: #046bd2;
+            }
+
+            .connect-prompt-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                font-size: 16px;
+            }
+
+            .connect-prompt-content span:first-child {
+                font-size: 24px;
+            }
+
+            .riddle-input {
+                width: 100%;
+                padding: 12px 16px;
+                margin-bottom: 16px;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                background: white;
+                font-size: 14px;
+                transition: all 0.2s;
+                outline: none;
+            }
+
+            .riddle-input:focus {
+                border-color: #00ddeb;
+                box-shadow: 0 0 0 3px rgba(0, 221, 235, 0.1);
+            }
+
+            .riddle-input:disabled {
+                background: #f1f5f9;
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+            .nav-arrow {
+                width: 36px;
+                height: 36px;
+                border: 2px solid #00ddeb;
+                border-radius: 50%;
+                background: white;
+                color: #00ddeb;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-arrow:disabled {
+                border-color: #e2e8f0;
+                color: #94a3b8;
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+
+            .nav-arrow:not(:disabled):hover {
+                cursor: pointer;
+                background: #046bd2;
+                color: white;
+                transform: scale(1.1);
+            }
+
+            @media (max-width: 768px) {
+                .two-column-layout {
+                    grid-template-columns: 1fr;
+                }
+
+                .progress-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Staking Form Styles */
+            .input-group {
+                margin: 12px 0;
+            }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 600;
+                color: #374151;
+                font-size: 14px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 10px;
+                border: 2px solid #e5e7eb;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: border-color 0.2s;
+                box-sizing: border-box;
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: #00ddeb;
+                box-shadow: 0 0 0 3px rgba(0, 221, 235, 0.1);
+            }
+
+            .pool-info {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 12px;
+                margin: 12px 0;
+                border: 1px solid #e2e8f0;
+            }
+
+            .stake-limits {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 8px 0;
+                font-size: 14px;
+            }
+
+            .balance-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 12px 0;
+                padding: 8px;
+                background: #f0f9ff;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .view-stakes-btn {
+                background-color: #046bd2;
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex: 1;
+            }
+
+            .view-stakes-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            }
+
+            /* Avatar Section Styling */
+            .avatar-section {
+                display: flex;
+                justify-content: center;
+                margin: 20px 0;
+            }
+
+            .avatar-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            .avatar-icon {
+                width: 100px;
+                height: 100px;
+                border: 3px solid;
+                border-image: linear-gradient(135deg, #00ddeb 0%, #046bd2 100%)
+                    1;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(0, 221, 235, 0.3);
+            }
+
+            .avatar-icon:hover {
+                transform: scale(1.1);
+                box-shadow: 0 8px 25px rgba(0, 221, 235, 0.5);
+            }
+
+            /* Riddle Submission Modal Styles */
+            .modal {
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .riddle-modal {
+                background: white;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                border: 2px solid;
+                border-image: linear-gradient(135deg, #00ddeb 0%, #046bd2 100%)
+                    1;
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 24px 16px 24px;
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            .modal-header h3 {
+                margin: 0;
+                color: #046bd2;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .close-modal {
+                cursor: pointer;
+                font-size: 28px;
+                color: #999;
+                font-weight: bold;
+                transition: color 0.3s;
+            }
+
+            .close-modal:hover {
+                color: #046bd2;
+            }
+
+            .modal-body {
+                padding: 24px;
+            }
+
+            .reward-message {
+                text-align: center;
+                margin-bottom: 20px;
+                padding: 16px;
+                background: linear-gradient(135deg, #e6fffa 0%, #f0f9ff 100%);
+                border-radius: 8px;
+                border-left: 4px solid #00ddeb;
+            }
+
+            .reward-message p {
+                margin: 0;
+                font-size: 16px;
+                color: #046bd2;
+            }
+
+            .answer-display {
+                margin-bottom: 20px;
+                padding: 16px;
+                background: #f8fafc;
+                border-radius: 8px;
+                border-left: 4px solid #046bd2;
+            }
+
+            .answer-display h4 {
+                margin: 0 0 8px 0;
+                color: #046bd2;
+                font-size: 14px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .answer-display p {
+                margin: 0;
+                font-size: 16px;
+                color: #334155;
+                font-weight: 500;
+            }
+
+            .comment-section {
+                margin-bottom: 20px;
+            }
+
+            .comment-section label {
+                display: block;
+                margin-bottom: 8px;
+                color: #046bd2;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .comment-section textarea {
+                width: 100%;
+                min-height: 100px;
+                padding: 12px;
+                border: 2px solid #e5e5e5;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: inherit;
+                resize: vertical;
+                transition: border-color 0.3s;
+            }
+
+            .comment-section textarea:focus {
+                outline: none;
+                border-color: #00ddeb;
+                box-shadow: 0 0 0 3px rgba(0, 221, 235, 0.1);
+            }
+
+            .comment-counter {
+                margin-top: 8px;
+                font-size: 12px;
+                color: #666;
+                text-align: right;
+            }
+
+            .share-x-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                padding: 12px 20px;
+                background: linear-gradient(135deg, #00ddeb 0%, #046bd2 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0, 221, 235, 0.3);
+            }
+
+            .share-x-btn:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 221, 235, 0.4);
+                background: linear-gradient(135deg, #046bd2 0%, #00ddeb 100%);
+            }
+
+            .share-x-btn:disabled {
+                background: #9ca3af;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
+            }
+
+            .share-x-btn svg {
+                transition: transform 0.3s ease;
+            }
+
+            .share-x-btn:hover:not(:disabled) svg {
+                transform: scale(1.1);
+            }
+
+
+
+            /* Info Button and Tooltip Styles */
+            .info-section {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .info-button {
+                width: 20px;
+                height: 20px;
+                background: linear-gradient(135deg, #00ddeb 0%, #046bd2 100%);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                font-weight: bold;
+                font-size: 12px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                transition: all 0.2s ease;
+            }
+
+            .info-button:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(0, 221, 235, 0.4);
+            }
+
+            .tooltip {
+                position: absolute;
+                bottom: 25px;
+                transform: translateX(-50%);
+                background: #1a1a1a;
+                color: white;
+                padding: 12px 16px;
+                border-radius: 8px;
+                font-size: 12px;
+                line-height: 1.4;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                width: 320px;
+                white-space: normal;
+                text-align: left;
+            }
+
+            /* First card tooltip - position to left to avoid overlap */
+            .card:first-child .tooltip {
+                right: 0px;
+                transform: translateX(0);
+            }
+
+            .card:first-child .tooltip::after {
+                right: 0;
+            }
+
+            /* Second card tooltip - position to right to avoid overlap */
+            .card:last-child .tooltip {
+                right: 0;
+                left: auto;
+                transform: translateX(0);
+            }
+
+            .card:last-child .tooltip::after {
+                right: 0;
+            }
+
+            .tooltip::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                transform: translateX(-50%);
+                border: 5px solid transparent;
+                border-top-color: #1a1a1a;
+            }
+
+            .info-button:hover .tooltip {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .tooltip-benefits {
+                margin-bottom: 8px;
+            }
+
+            .tooltip-benefits:last-child {
+                margin-bottom: 0;
+            }
+
+            .tooltip-title {
+                font-weight: bold;
+                color: #00ddeb;
+                margin-bottom: 4px;
+            }
+
+            .tooltip-list {
+                margin-left: 8px;
+                font-size: 11px;
+            }
+
+            /* Guess Status Indicator */
+            .guess-status {
+                font-size: 12px;
+                color: #666;
+                margin-top: 4px;
+                font-style: italic;
+            }
+
+            .guess-count {
+                background: linear-gradient(135deg, #00ddeb 0%, #046bd2 100%);
+                color: white;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: bold;
+                margin-left: 8px;
+            }
+
+            /* Responsive Modal Styles */
+            @media (max-width: 768px) {
+                .two-column-layout {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                    max-width: 600px;
+                    margin: 0 auto 32px auto;
+                }
+
+                /* Reset tooltip positioning for mobile - use centered approach */
+                .card:first-child .tooltip,
+                .card:last-child .tooltip {
+                    width: 280px;
+                    font-size: 11px;
+                    right: 0;
+                }
+
+                .card:first-child .tooltip::after,
+                .card:last-child .tooltip::after {
+                    right: 0%;
+                }
+
+                .riddle-modal {
+                    width: 95%;
+                    max-height: 90vh;
+                }
+
+                .modal-header {
+                    padding: 16px 20px 12px 20px;
+                }
+
+                .modal-header h3 {
+                    font-size: 18px;
+                }
+
+                .modal-body {
+                    padding: 20px;
+                }
+
+                .comment-section textarea {
+                    min-height: 80px;
+                    font-size: 16px; /* Prevent iOS zoom */
+                }
+            }
+
+            @media (max-width: 480px) {
+                .riddle-modal {
+                    width: 98%;
+                    margin: 10px;
+                }
+
+                /* Reset tooltip positioning for small mobile - use centered approach */
+                .card:first-child .tooltip,
+                .card:last-child .tooltip {
+                    width: 260px;
+                    font-size: 10px;
+                    right: 0;
+                    padding: 8px 12px;
+                }
+
+                .card:first-child .tooltip::after,
+                .card:last-child .tooltip::after {
+                    right: 0;
+                }
+
+                .modal-header {
+                    padding: 12px 16px 8px 16px;
+                }
+
+                .modal-header h3 {
+                    font-size: 16px;
+                }
+
+                .modal-body {
+                    padding: 16px;
+                }
+
+                .reward-message {
+                    padding: 12px;
+                    margin-bottom: 16px;
+                }
+
+                .answer-display {
+                    padding: 12px;
+                    margin-bottom: 16px;
+                }
+
+                .comment-section {
+                    margin-bottom: 16px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-title">User Dashboard</div>
+            <div class="wallet-section">
+                <button id="connectWallet" class="connect-btn">
+                    Connect Wallet
+                </button>
+                <div class="wallet-info" id="walletInfo" style="display: none">
+                    <span id="walletAddress">Not Connected</span>
+                    <button id="disconnectWallet" class="disconnect-btn">
+                        Disconnect
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="welcome-section">
+                <h1 class="welcome-title">Welcome to your Dashboard!</h1>
+                <p class="welcome-subtitle">
+                    Guess, stake, win million-Shsy rewards!
+                </p>
+            </div>
+
+            <!-- Telegram Button Section -->
+            <div class="max-w-7xl my-2 mx-auto px-4 sm:px-6 py-3">
+                <div class="flex justify-center">
+                    <button
+                        id="telegramButton"
+                        class="text-white px-6 py-3 rounded-lg font-medium text-sm sm:text-base flex items-center justify-center gap-3 transition-all duration-300 shadow-lg"
+                        style="
+                            background: linear-gradient(
+                                135deg,
+                                #00ddeb,
+                                #046bd2
+                            );
+                            border: 1px solid rgba(0, 221, 235, 0.3);
+                        "
+                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(0, 221, 235, 0.4)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 221, 235, 0.3)';"
+                        onclick="window.open('https://t.me/shsycoin', '_blank')"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.82 1.16-5.14 3.4-.49.33-.93.49-1.33.48-.44-.01-1.29-.25-1.92-.45-.77-.25-1.38-.38-1.33-.8.03-.22.36-.44.98-.66 3.84-1.68 6.4-2.79 7.69-3.34 3.66-1.54 4.42-1.81 4.91-1.82.11 0 .35.03.51.17.13.12.17.27.19.38.02.11.04.35.02.54z"
+                            />
+                        </svg>
+                        <span>Go to Telegram</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">🔥 Total Staked</div>
+                    <div class="stat-value" id="totalStaked">1,250 SHSY</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">🏆 Total Rewards</div>
+                    <div class="stat-value" id="totalRewards">89.5HSY</div>
+                    <div class="stat-details">
+                        Last reward<br />
+                        69.5 SHSY<br />
+                        From Referrals<br />
+                        20 SHSY
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">👥 Referral Status</div>
+                    <div class="stat-value" id="referralRewards">20 SHSY</div>
+                    <div class="stat-details">
+                        Total Invited<br />
+                        15<br />
+                        BOUJEE_BOYZ: +40 SHSY<br />
+                        BOUJEE_BOYZ: +40 SHSY
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">🎯 Guess Rewards</div>
+                    <div class="stat-value" id="guessRewards">69.5 SHSY</div>
+                </div>
+            </div>
+
+            <div class="two-column-layout">
+                <div class="card">
+                    <div class="card-header">🧩 Daily Guessing Challenge</div>
+
+                    <!-- Always visible trivia content -->
+                    <div id="triviaContent1">
+                        <div id="currentRiddle1">
+                            <div class="question-text" id="riddleQuestion1">
+                                Loading question...
+                            </div>
+
+                            <input
+                                type="text"
+                                id="riddleAnswer1"
+                                class="riddle-input"
+                                placeholder="Connect wallet to submit answers..."
+                                disabled
+                                maxlength="100"
+                            />
+
+                            <div class="info-section">
+                                <button
+                                    class="submit-btn"
+                                    id="submitTrivia1"
+                                    onclick="submitTrivia(1)"
+                                    disabled
+                                >
+                                    <span id="submitText1"
+                                        >Connect Wallet to Submit</span
+                                    >
+                                </button>
+                                <div class="info-button">
+                                    i
+                                    <div class="tooltip">
+                                        <div class="tooltip-benefits">
+                                            <div class="tooltip-title">
+                                                Free Guessing:
+                                            </div>
+                                            <div class="tooltip-list">
+                                                • 1 free guess for each
+                                                riddle<br />
+                                                • Free Guess Reward 3 SHSY<br />
+                                                • Correct Guess Reward 1 USDT<br />
+                                                • Share Answer Reward 3 SHSY
+                                                Comment (5+ words, no spaces) in
+                                                Chinese or English<br />
+                                                • Participate in 10 day and 30
+                                                day reward pool prizes<br />
+                                                • Can't participate in 1 Million
+                                                SHSY pool Prize
+                                            </div>
+                                        </div>
+                                        <div class="tooltip-benefits">
+                                            <div class="tooltip-title">
+                                                Paid Guessing ($4 USDT):
+                                            </div>
+                                            <div class="tooltip-list">
+                                                • 3 guesses for each riddle<br />
+                                                • Paid Guess Reward 10 SHSY<br />
+                                                • Correct Guess Reward 30
+                                                SHSY<br />
+                                                • Share Answer Reward 3 SHSY
+                                                Comment (5+ words, no spaces) in
+                                                Chinese or English<br />
+                                                • Participate in 10 day and 30
+                                                day reward pool prizes<br />
+                                                • Participate in 1 Million SHSY
+                                                pool Prize
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="guess-status" id="guessStatus1">
+                                Free guess available
+                            </div>
+
+                            <div class="hint" id="riddleHint1">
+                                💡 Hint: Loading hint...
+                            </div>
+                        </div>
+
+                        <!-- USDT Deposit Prompt -->
+                        <div id="depositPrompt1" style="display: none"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">🧩 Win a Million SHSY Prize</div>
+
+                    <!-- Always visible trivia content -->
+                    <div id="triviaContent2">
+                        <div id="currentRiddle2">
+                            <div class="question-text" id="riddleQuestion2">
+                                Loading question...
+                            </div>
+
+                            <input
+                                type="text"
+                                id="riddleAnswer2"
+                                class="riddle-input"
+                                placeholder="Connect wallet to submit answers..."
+                                disabled
+                                maxlength="100"
+                            />
+
+                            <div class="info-section">
+                                <button
+                                    class="submit-btn"
+                                    id="submitTrivia2"
+                                    onclick="submitTrivia(2)"
+                                    disabled
+                                >
+                                    <span id="submitText2"
+                                        >Connect Wallet to Submit</span
+                                    >
+                                </button>
+                                <div class="info-button">
+                                    i
+                                    <div class="tooltip">
+                                        <div class="tooltip-benefits">
+                                            <div class="tooltip-title">
+                                                Free Guessing:
+                                            </div>
+                                            <div class="tooltip-list">
+                                                • 1 free guess for each
+                                                riddle<br />
+                                                • Free Guess Reward 3 SHSY<br />
+                                                • Correct Guess Reward 1 USDT<br />
+                                                • Share Answer Reward 3 SHSY
+                                                Comment (5+ words, no spaces) in
+                                                Chinese or English<br />
+                                                • Participate in 10 day and 30
+                                                day reward pool prizes<br />
+                                                • Can't participate in 1 Million
+                                                SHSY pool Prize
+                                            </div>
+                                        </div>
+                                        <div class="tooltip-benefits">
+                                            <div class="tooltip-title">
+                                                Paid Guessing ($4 USDT):
+                                            </div>
+                                            <div class="tooltip-list">
+                                                • 3 guesses for each riddle<br />
+                                                • Paid Guess Reward 10 SHSY<br />
+                                                • Correct Guess Reward 30
+                                                SHSY<br />
+                                                • Share Answer Reward 3 SHSY
+                                                Comment (5+ words, no spaces) in
+                                                Chinese or English<br />
+                                                • Participate in 10 day and 30
+                                                day reward pool prizes<br />
+                                                • Participate in 1 Million SHSY
+                                                pool Prize
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="guess-status" id="guessStatus2">
+                                Free guess available
+                            </div>
+
+                            <div class="hint" id="riddleHint2">
+                                💡 Hint: Loading hint...
+                            </div>
+                        </div>
+
+                        <!-- USDT Deposit Prompt -->
+                        <div id="depositPrompt2" style="display: none"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stake-section">
+                <div class="card">
+                    <div class="card-header">💰 Staking Center</div>
+
+                    <!-- Pool Selection -->
+                    <div class="input-group">
+                        <label>Select Pool:</label>
+                        <select
+                            id="poolSelect"
+                            class="form-control"
+                            onchange="updatePoolInfo()"
+                        >
+                            <option value="">Loading pools...</option>
+                        </select>
+                    </div>
+
+                    <!-- Pool Info Display -->
+                    <div id="poolInfo" class="pool-info" style="display: none">
+                        <div class="apy-info">
+                            <span class="apy-label">APY Rate</span>
+                            <span class="apy-value" id="selectedAPY">-</span>
+                        </div>
+                        <div class="lock-period">
+                            <span>Lock Period</span>
+                            <span id="selectedLockPeriod">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Wallet Balance -->
+                    <div class="balance-info">
+                        <span>Your SHSY Balance:</span>
+                        <span id="walletBalance">Connect wallet to view</span>
+                    </div>
+
+                    <!-- Stake Amount Input -->
+                    <div class="input-group">
+                        <label>Stake Amount (SHSY):</label>
+                        <input
+                            type="number"
+                            id="stakeAmount"
+                            class="form-control"
+                            placeholder="Enter any amount you want to stake"
+                            step="0.01"
+                        />
+                    </div>
+
+                    <div class="action-buttons">
+                        <button
+                            class="stake-btn"
+                            onclick="stakeTokensFromDashboard()"
+                            id="stakeButton"
+                            disabled
+                        >
+                            Connect Wallet to Stake
+                        </button>
+                        <button class="view-stakes-btn" onclick="goToDApp()">
+                            View All Stakes
+                        </button>
+                    </div>
+
+                    <button
+                        class="million-btn"
+                        onclick="window.location.href='/dapp'"
+                    >
+                        Win Million Shsy Rewards!
+                    </button>
+
+                    <div class="prize-info">
+                        Boost your chances by inviting friends! Each referral
+                        adds 1% point to the Million SHSY Prize pool.
+                    </div>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    📈 Challenge Progress Overview
+                </div>
+
+                <div id="walletConnectPrompt" class="wallet-connect-prompt">
+                    <div class="connect-prompt-content">
+                        <span>🔗</span>
+                        <div>
+                            <strong
+                                >Connect your wallet to see your
+                                progress</strong
+                            ><br />
+                            <span
+                                >View your 10d/30d challenges and million pool
+                                progress</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    id="progressContent"
+                    class="progress-grid"
+                    style="display: none"
+                >
+                    <div class="progress-item">
+                        <div class="progress-title">10 Day Grand Prize</div>
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                id="challenge10d"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                        <div class="progress-status" id="status10d">
+                            Not Started
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-title">30 Day Grand Prize</div>
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                id="challenge30d"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                        <div class="progress-status" id="status30d">
+                            Not Started
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-title">Million SHSY Pool</div>
+                        <div class="progress-bar">
+                            <div
+                                class="progress-fill"
+                                id="millionPool"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                        <div class="progress-status" id="statusMillion">
+                            Not Participating
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Notification Area -->
+            <div
+                id="notification"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #10b981;
+                    color: white;
+                    padding: 16px 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 1000;
+                    max-width: 350px;
+                "
+            >
+                <div
+                    style="font-weight: 600; margin-bottom: 4px"
+                    id="notificationTitle"
+                >
+                    Success!
+                </div>
+                <div id="notificationMessage">
+                    Your puzzle has been submitted successfully!
+                </div>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+        <!-- Buffer polyfill for browser compatibility -->
+        <script>
+            if (typeof Buffer === "undefined") {
+                window.Buffer = {
+                    from: function (data, encoding) {
+                        if (encoding === "base64") {
+                            try {
+                                return Uint8Array.from(atob(data), (c) =>
+                                    c.charCodeAt(0),
+                                );
+                            } catch (e) {
+                                console.error("Base64 decode error:", e);
+                                // Try direct conversion if it's already bytes
+                                if (Array.isArray(data)) {
+                                    return new Uint8Array(data);
+                                }
+                                throw e;
+                            }
+                        }
+                        return new Uint8Array(data);
+                    },
+                };
+            }
+        </script>
+        <script>
+            let selectedAnswer = null;
+            let walletConnected = false;
+            let walletAddress = null;
+            let currentWallet = null;
+
+            let currentRiddles = [];
+            let currentRiddleIndex = 0;
+            let selectedTriviaAnswer = null;
+
+            // Tiered guessing system variables
+            let riddleGuessCount = {}; // Track guess count per riddle
+            let riddlePaidStatus = {}; // Track if user has paid for additional guesses
+            let usdtDepositStatus = false; // Track if user has made $4 USDT deposit
+
+            // Solana connection
+            const connection = new solanaWeb3.Connection(
+                "https://api.devnet.solana.com",
+                "confirmed",
+            );
+
+            // Staking pools data
+            let stakingPools = [];
+            let selectedPool = null;
+
+            // Load staking pools
+            async function loadStakingPools() {
+                try {
+                    console.log("Loading staking pools from API...");
+                    const response = await fetch("/api/staking/pools");
+                    const data = await response.json();
+                    console.log("API response:", data);
+
+                    if (data.success) {
+                        stakingPools = data.pools;
+                        console.log(
+                            "Loaded pools from database:",
+                            stakingPools,
+                        );
+                        populatePoolSelect();
+                    } else {
+                        console.error(
+                            "Failed to load staking pools:",
+                            data.error,
+                        );
+                        // No fallback - user wants no min/max limits
+                        console.log("Using empty pools array due to API error");
+                        stakingPools = [];
+                        populatePoolSelect();
+                    }
+                } catch (error) {
+                    console.error("Error loading staking pools:", error);
+                    // No fallback - user wants no min/max limits
+                    console.log("Using empty pools array due to network error");
+                    stakingPools = [];
+                    populatePoolSelect();
+                }
+            }
+
+            // Populate pool selection dropdown
+            function populatePoolSelect() {
+                const poolSelect = document.getElementById("poolSelect");
+                poolSelect.innerHTML =
+                    '<option value="">Select a staking pool...</option>';
+
+                stakingPools.forEach((pool) => {
+                    const option = document.createElement("option");
+                    option.value = pool.id;
+                    option.textContent = `${pool.name} - ${pool.apyRate}% APY (${pool.lockPeriodDays} days)`;
+                    poolSelect.appendChild(option);
+                });
+            }
+
+            // Update pool information when pool is selected
+            function updatePoolInfo() {
+                const poolSelect = document.getElementById("poolSelect");
+                const poolInfo = document.getElementById("poolInfo");
+                const selectedPoolId = parseInt(poolSelect.value);
+
+                if (selectedPoolId) {
+                    selectedPool = stakingPools.find(
+                        (pool) => pool.id === selectedPoolId,
+                    );
+                    if (selectedPool) {
+                        document.getElementById("selectedAPY").textContent =
+                            `${selectedPool.apyRate}%`;
+                        document.getElementById(
+                            "selectedLockPeriod",
+                        ).textContent = `${selectedPool.lockPeriodDays} days`;
+                        poolInfo.style.display = "block";
+                    }
+                } else {
+                    poolInfo.style.display = "none";
+                    selectedPool = null;
+                }
+            }
+
+            // Stake tokens from dashboard
+            async function stakeTokensFromDashboard() {
+                if (!walletConnected) {
+                    showNotification(
+                        "Error",
+                        "Please connect your wallet first",
+                        "error",
+                    );
+                    return;
+                }
+
+                if (!selectedPool) {
+                    showNotification(
+                        "Error",
+                        "Please select a staking pool",
+                        "error",
+                    );
+                    return;
+                }
+
+                const stakeAmount = parseFloat(
+                    document.getElementById("stakeAmount").value,
+                );
+                if (!stakeAmount || stakeAmount <= 0) {
+                    showNotification(
+                        "Error",
+                        "Please enter a valid stake amount",
+                        "error",
+                    );
+                    return;
+                }
+
+                try {
+                    showNotification(
+                        "Info",
+                        "Creating stake transaction...",
+                        "info",
+                    );
+
+                    // Step 1: Create stake transaction
+                    const createResponse = await fetch(
+                        "/api/dapp/stake/create-transaction",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                walletAddress: walletAddress,
+                                amount: stakeAmount,
+                                poolId: selectedPool.id,
+                            }),
+                        },
+                    );
+
+                    const createData = await createResponse.json();
+                    if (createData.success) {
+                        // Step 2: Sign and send transaction
+                        let transaction;
+                        try {
+                            console.log("Full response data:", createData);
+
+                            // Get serialized transaction from nested transactionData object
+                            const serializedTransaction =
+                                createData.transactionData
+                                    ?.serializedTransaction;
+                            console.log(
+                                "Transaction data received:",
+                                serializedTransaction,
+                            );
+
+                            if (!serializedTransaction) {
+                                throw new Error(
+                                    "No serialized transaction found in response",
+                                );
+                            }
+
+                            // Check if the data is already a Uint8Array or array
+                            if (Array.isArray(serializedTransaction)) {
+                                transaction = solanaWeb3.Transaction.from(
+                                    new Uint8Array(serializedTransaction),
+                                );
+                            } else if (
+                                typeof serializedTransaction === "string"
+                            ) {
+                                // Try base64 decoding
+                                const transactionBytes = Uint8Array.from(
+                                    atob(serializedTransaction),
+                                    (c) => c.charCodeAt(0),
+                                );
+                                transaction =
+                                    solanaWeb3.Transaction.from(
+                                        transactionBytes,
+                                    );
+                            } else {
+                                // Direct conversion
+                                transaction = solanaWeb3.Transaction.from(
+                                    serializedTransaction,
+                                );
+                            }
+                        } catch (decodeError) {
+                            console.error(
+                                "Transaction decode error:",
+                                decodeError,
+                            );
+                            console.error("Response data:", createData);
+                            showNotification(
+                                "Error",
+                                "Failed to decode transaction data",
+                                "error",
+                            );
+                            return;
+                        }
+
+                        // Sign and send transaction using the exact same method as DApp
+                        let signatureResult;
+                        if (window.solflare && window.solflare.isConnected) {
+                            console.log(
+                                "Using Solflare signAndSendTransaction",
+                            );
+                            signatureResult =
+                                await window.solflare.signAndSendTransaction(
+                                    transaction,
+                                );
+                        } else if (window.solana && window.solana.isConnected) {
+                            console.log("Using Phantom signAndSendTransaction");
+                            signatureResult =
+                                await window.solana.signAndSendTransaction(
+                                    transaction,
+                                );
+                        } else {
+                            throw new Error(
+                                "No wallet connected or wallet not supported",
+                            );
+                        }
+
+                        // Extract signature string from result object (same as DApp)
+                        let signature;
+                        console.log(
+                            "Wallet signature result:",
+                            signatureResult,
+                        );
+                        if (signatureResult) {
+                            if (typeof signatureResult === "string") {
+                                signature = signatureResult;
+                            } else if (signatureResult.signature) {
+                                signature = signatureResult.signature;
+                            } else {
+                                signature = signatureResult;
+                            }
+                        }
+
+                        if (!signature) {
+                            throw new Error(
+                                "Failed to get transaction signature from wallet",
+                            );
+                        }
+
+                        await connection.confirmTransaction(
+                            signature,
+                            "confirmed",
+                        );
+
+                        // Step 3: Confirm the stake in database
+                        const confirmResponse = await fetch(
+                            "/api/dapp/stake/confirm",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    walletAddress: walletAddress,
+                                    amount: stakeAmount,
+                                    poolId: selectedPool.id,
+                                    transactionSignature: signature,
+                                }),
+                            },
+                        );
+
+                        const confirmData = await confirmResponse.json();
+                        if (confirmData.success) {
+                            showNotification(
+                                "Success",
+                                "Stake created successfully! Redirecting to DApp...",
+                                "success",
+                            );
+
+                            // Redirect to DApp after successful stake
+                            setTimeout(() => {
+                                window.location.href = "/dapp";
+                            }, 2000);
+                        } else {
+                            showNotification(
+                                "Error",
+                                confirmData.error || "Failed to confirm stake",
+                                "error",
+                            );
+                        }
+                    } else {
+                        showNotification(
+                            "Error",
+                            createData.error || "Failed to create stake",
+                            "error",
+                        );
+                    }
+                } catch (error) {
+                    console.error("Staking error:", error);
+                    showNotification(
+                        "Error",
+                        "Failed to create stake transaction",
+                        "error",
+                    );
+                }
+            }
+
+            // Go to DApp to view stakes
+            function goToDApp() {
+                window.location.href = "/dapp";
+            }
+
+            // Load riddles from backend
+            async function loadRiddles() {
+                try {
+                    const response = await fetch("/api/dashboard/riddles");
+                    const data = await response.json();
+
+                    if (data.success) {
+                        currentRiddles = data.riddles;
+                        console.log("Loaded riddles:", currentRiddles);
+                        updateRiddleDisplay();
+                    } else {
+                        console.error("Failed to load riddles:", data.error);
+                    }
+                } catch (error) {
+                    console.error("Error loading riddles:", error);
+                }
+            }
+
+            // Update riddle display for both sections
+            function updateRiddleDisplay() {
+                // Update first riddle section
+                if (currentRiddles.length >= 1) {
+                    const riddle1 = currentRiddles[0];
+                    document.getElementById("riddleQuestion1").textContent =
+                        riddle1.contentEnglish ||
+                        riddle1.question ||
+                        "Loading question...";
+                    document.getElementById("riddleHint1").textContent =
+                        riddle1.hintEnglish
+                            ? `💡 Hint: ${riddle1.hintEnglish}`
+                            : riddle1.hint
+                              ? `💡 Hint: ${riddle1.hint}`
+                              : "💡 Use your blockchain knowledge!";
+                } else {
+                    document.getElementById("riddleQuestion1").textContent =
+                        "No active trivia challenge";
+                    document.getElementById("riddleHint1").textContent =
+                        "💡 Check back later for new questions!";
+                }
+
+                // Update second riddle section
+                if (currentRiddles.length >= 2) {
+                    const riddle2 = currentRiddles[1];
+                    document.getElementById("riddleQuestion2").textContent =
+                        riddle2.contentEnglish ||
+                        riddle2.question ||
+                        "Loading question...";
+                    document.getElementById("riddleHint2").textContent =
+                        riddle2.hintEnglish
+                            ? `💡 Hint: ${riddle2.hintEnglish}`
+                            : riddle2.hint
+                              ? `💡 Hint: ${riddle2.hint}`
+                              : "💡 Use your blockchain knowledge!";
+                } else {
+                    document.getElementById("riddleQuestion2").textContent =
+                        "No second trivia challenge";
+                    document.getElementById("riddleHint2").textContent =
+                        "💡 Check back later for new questions!";
+                }
+
+                // Update submit buttons and deposit prompts
+                updateSubmitButton(1);
+                updateSubmitButton(2);
+
+                // Check and update deposit status if wallet is connected
+                if (currentWallet && walletAddress) {
+                    checkUSDTDepositStatus();
+                }
+            }
+
+            // Load user's guess counts from database
+            async function loadUserGuessCount() {
+                if (!walletAddress || !currentRiddles.length) return;
+
+                try {
+                    // Load guess counts for each riddle
+                    for (const riddle of currentRiddles) {
+                        const response = await fetch(
+                            `/api/riddles/submissions/user/${walletAddress}/riddle/${riddle.id}`,
+                        );
+                        const data = await response.json();
+
+                        if (data.success && data.submissions) {
+                            riddleGuessCount[riddle.id] =
+                                data.submissions.length;
+                            console.log(
+                                `Loaded ${data.submissions.length} guesses for riddle ${riddle.id}`,
+                            );
+                        } else {
+                            riddleGuessCount[riddle.id] = 0;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading user guess counts:", error);
+                }
+            }
+
+            // Check if user has deposited USDT for million pool participation
+            async function checkUSDTDepositStatus() {
+                if (!walletAddress) return;
+
+                try {
+                    const response = await fetch(
+                        `/api/million-pool/participant/${walletAddress}`,
+                    );
+                    const data = await response.json();
+
+                    let hasDeposited = false;
+                    if (data.success && data.hasDeposited) {
+                        hasDeposited = true;
+
+                        // Update paid status for all current riddles when user has deposited USDT
+                        currentRiddles.forEach((riddle) => {
+                            riddlePaidStatus[riddle.id] = true;
+                        });
+
+                        console.log(
+                            "User has paid $4 USDT - enabled enhanced guessing for all riddles",
+                        );
+                    } else {
+                        // Clear paid status if user hasn't deposited
+                        currentRiddles.forEach((riddle) => {
+                            riddlePaidStatus[riddle.id] = false;
+                        });
+                    }
+
+                    // Update both riddle cards based on deposit status
+                    updateDepositPrompts(hasDeposited);
+
+                    // Update submit buttons to reflect paid status
+                    updateSubmitButton(1);
+                    updateSubmitButton(2);
+                } catch (error) {
+                    console.error("Error checking USDT deposit status:", error);
+                    updateDepositPrompts(false);
+                }
+            }
+
+            // Update deposit prompts in riddle cards with conditional logic
+            function updateDepositPrompts(hasDeposited) {
+                for (let i = 1; i <= 2; i++) {
+                    const depositPrompt = document.getElementById(
+                        `depositPrompt${i}`,
+                    );
+
+                    if (!currentWallet || !walletAddress) {
+                        // Hide prompt when wallet not connected
+                        depositPrompt.style.display = "none";
+                        continue;
+                    }
+
+                    const riddleId = currentRiddles[i - 1]?.id;
+                    const guessCount = riddleGuessCount[riddleId] || 0;
+
+                    if (hasDeposited) {
+                        // User has already paid $4 USDT - always show "You are the Paid User"
+                        depositPrompt.innerHTML = `
+                            <div style="background: #10b981; padding: 8px 12px; border-radius: 6px; margin-top: 8px; text-align: center; color: white; font-size: 12px; font-weight: 600;">
+                                ✅ You are the Paid User
+                            </div>
+                        `;
+                        depositPrompt.style.display = "block";
+                    } else {
+                        // User hasn't paid
+                        if (guessCount === 0) {
+                            // User hasn't guessed yet - show nothing
+                            depositPrompt.style.display = "none";
+                        } else {
+                            // User has used their free guess - now show the deposit button
+                            depositPrompt.innerHTML = `
+                                <div style="background: linear-gradient(135deg, #00ddeb, #046bd2); padding: 12px; border-radius: 8px; margin-top: 12px; text-align: center;">
+                                    <div style="color: white; font-size: 14px; margin-bottom: 8px;">
+                                        🎁 Want to participate in ALL Prize Pools?
+                                    </div>
+                                    <button onclick="depositUSDT()" 
+                                            style="background: white; color: #046bd2; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px;">
+                                        Deposit $4 USDT
+                                    </button>
+                                </div>
+                            `;
+                            depositPrompt.style.display = "block";
+                        }
+                    }
+                }
+            }
+
+            // Initialize deposit prompts - hide them initially
+            function initializeDepositPrompts() {
+                for (let i = 1; i <= 2; i++) {
+                    const depositPrompt = document.getElementById(
+                        `depositPrompt${i}`,
+                    );
+                    if (depositPrompt) {
+                        depositPrompt.style.display = "none";
+                    }
+                }
+            }
+
+            // USDT deposit function - use same working DApp API
+            async function depositUSDT() {
+                if (!currentWallet || !walletAddress) {
+                    showNotification(
+                        "Connect Wallet",
+                        "Please connect your wallet first",
+                        "info",
+                    );
+                    return;
+                }
+
+                try {
+                    // Show loading state
+                    for (let i = 1; i <= 2; i++) {
+                        const depositPrompt = document.getElementById(
+                            `depositPrompt${i}`,
+                        );
+                        if (depositPrompt) {
+                            depositPrompt.innerHTML = `
+                                <div style="background: #6b7280; padding: 12px; border-radius: 8px; margin-top: 12px; text-align: center; color: white;">
+                                    <div style="font-size: 14px;">Processing deposit...</div>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    console.log(
+                        "Creating USDT deposit transaction for:",
+                        walletAddress,
+                    );
+
+                    // Create USDT deposit transaction
+                    const response = await fetch("/api/dapp/deposit-usdt", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            walletAddress: walletAddress,
+                            amount: 4,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        throw new Error(
+                            data.error ||
+                                "Failed to create deposit transaction",
+                        );
+                    }
+
+                    console.log("Transaction created, requesting signature...");
+
+                    // Deserialize transaction from base64
+                    const binaryString = atob(data.transaction);
+                    const transactionBytes = new Uint8Array(
+                        binaryString.length,
+                    );
+                    for (let i = 0; i < binaryString.length; i++) {
+                        transactionBytes[i] = binaryString.charCodeAt(i);
+                    }
+                    const transaction =
+                        solanaWeb3.Transaction.from(transactionBytes);
+
+                    // Use wallet-specific signing method
+                    let signedTransaction;
+
+                    // Determine wallet type based on available objects
+                    let walletType = "unknown";
+                    if (window.solana && window.solana.isPhantom) {
+                        walletType = "phantom";
+                    } else if (window.solflare) {
+                        walletType = "solflare";
+                    }
+
+                    if (
+                        walletType === "phantom" &&
+                        window.solana &&
+                        window.solana.signTransaction
+                    ) {
+                        console.log("Using Phantom wallet signing...");
+                        signedTransaction =
+                            await window.solana.signTransaction(transaction);
+                    } else if (
+                        walletType === "solflare" &&
+                        window.solflare &&
+                        window.solflare.signTransaction
+                    ) {
+                        console.log("Using Solflare wallet signing...");
+                        signedTransaction =
+                            await window.solflare.signTransaction(transaction);
+                    } else if (
+                        currentWallet &&
+                        typeof currentWallet.signTransaction === "function"
+                    ) {
+                        console.log("Using generic wallet signing...");
+                        signedTransaction =
+                            await currentWallet.signTransaction(transaction);
+                    } else {
+                        console.error("No wallet signing method available");
+                        console.log("Current wallet:", currentWallet);
+                        console.log("Wallet type:", walletType);
+                        console.log("Window.solana:", window.solana);
+                        console.log("Window.solflare:", window.solflare);
+                        throw new Error(
+                            "Wallet does not support transaction signing",
+                        );
+                    }
+
+                    console.log("Transaction signed, sending to blockchain...");
+
+                    // Send transaction to blockchain
+                    let signature;
+                    try {
+                        signature = await connection.sendRawTransaction(
+                            signedTransaction.serialize(),
+                        );
+
+                        // Confirm the transaction
+                        await connection.confirmTransaction(
+                            signature,
+                            "confirmed",
+                        );
+
+                        console.log(
+                            "Transaction sent with signature:",
+                            signature,
+                        );
+                    } catch (sendError) {
+                        // Check if transaction was already processed (common with wallet retries)
+                        if (
+                            sendError.message &&
+                            sendError.message.includes("already been processed")
+                        ) {
+                            console.log(
+                                "Transaction already processed, extracting signature...",
+                            );
+                            // For already processed transactions, we can still verify participation
+                            signature = "processed_" + Date.now(); // Fallback identifier
+                        } else {
+                            throw sendError;
+                        }
+                    }
+
+                    // Record participation regardless of send status (since funds were deducted)
+                    const verifyResponse = await fetch(
+                        "/api/million-pool/verify-deposit",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                walletAddress: walletAddress,
+                                signature: signature,
+                            }),
+                        },
+                    );
+
+                    const verifyData = await verifyResponse.json();
+
+                    if (verifyData.success) {
+                        showNotification(
+                            "Deposit Successful! 🎉",
+                            "You can now participate in ALL Prize Pools including the Million SHSY Pool!",
+                            "success",
+                        );
+
+                        // Update deposit status
+                        checkUSDTDepositStatus();
+
+                        // Refresh dashboard stats
+                        loadDashboardData();
+                    } else {
+                        throw new Error(
+                            verifyData.error ||
+                                "Transaction verification failed",
+                        );
+                    }
+                } catch (error) {
+                    console.error("USDT deposit error:", error);
+                    showNotification(
+                        "Deposit Failed",
+                        error.message || "Failed to process USDT deposit",
+                        "error",
+                    );
+
+                    // Reset deposit prompts
+                    checkUSDTDepositStatus();
+                }
+            }
+
+            // Handle USDT deposit click for riddle buttons
+            function handleUSDTDepositClick(riddleNumber) {
+                if (!currentWallet || !walletAddress) {
+                    showNotification(
+                        "Connect Wallet",
+                        "Please connect your wallet first",
+                        "info",
+                    );
+                    return;
+                }
+
+                // Trigger the USDT deposit process
+                depositUSDT();
+            }
+
+            // Update submit button state for specific riddle with tiered guessing
+            function updateSubmitButton(riddleNumber) {
+                const submitBtn = document.getElementById(
+                    `submitTrivia${riddleNumber}`,
+                );
+                const answerInput = document.getElementById(
+                    `riddleAnswer${riddleNumber}`,
+                );
+                const submitText = document.getElementById(
+                    `submitText${riddleNumber}`,
+                );
+                const guessStatus = document.getElementById(
+                    `guessStatus${riddleNumber}`,
+                );
+
+                if (!submitBtn || !answerInput || !submitText || !guessStatus)
+                    return;
+
+                const riddleId = currentRiddles[riddleNumber - 1]?.id;
+                const guessCount = riddleGuessCount[riddleId] || 0;
+                const isPaid = riddlePaidStatus[riddleId] || false;
+
+                // Check if this riddle exists
+                if (!riddleId) return;
+
+                if (!currentWallet) {
+                    submitText.textContent = "Connect Wallet to Submit";
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = "0.7";
+                    submitBtn.style.background = "#94a3b8";
+                    submitBtn.style.cursor = "not-allowed";
+                    guessStatus.textContent =
+                        "Connect wallet to see guess status";
+                } else if (!answerInput.value.trim()) {
+                    if (isPaid) {
+                        // User has paid $4 USDT - gets 10 SHSY for all guesses
+                        if (guessCount < 3) {
+                            submitText.textContent = `Enter Answer (10 SHSY Reward)`;
+                            guessStatus.innerHTML = `Enhanced guessing: 10 SHSY per correct answer <span class="guess-count">${guessCount}/3</span>`;
+                        } else {
+                            submitText.textContent =
+                                "All Enhanced Guesses Used";
+                            guessStatus.innerHTML = `Maximum enhanced guesses reached <span class="guess-count">3/3</span>`;
+                        }
+                    } else {
+                        // Free user - gets 3 SHSY for first guess only
+                        if (guessCount === 0) {
+                            submitText.textContent =
+                                "Enter Answer (3 SHSY Reward)";
+                            guessStatus.textContent =
+                                "Free guess: 3 SHSY reward";
+                        } else {
+                            submitText.textContent =
+                                "Pay $4 USDT for More Guesses";
+                            guessStatus.innerHTML = `Free guess used. Pay $4 USDT for 10 SHSY rewards <span class="guess-count">1/1</span>`;
+                        }
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = "0.5";
+                    submitBtn.style.background = "#94a3b8";
+                    submitBtn.style.cursor = "not-allowed";
+                } else {
+                    // Answer is entered
+                    if (isPaid) {
+                        // User has paid $4 USDT - can make up to 3 guesses with 10 SHSY each
+                        if (guessCount < 3) {
+                            submitText.textContent = "Submit Answer (10 SHSY)";
+                            guessStatus.innerHTML = `Enhanced guessing: 10 SHSY per correct answer <span class="guess-count">${guessCount}/3</span>`;
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "1";
+                            submitBtn.style.background =
+                                "linear-gradient(135deg, #00ddeb, #046bd2)";
+                            submitBtn.style.cursor = "pointer";
+                            
+                            // Reset normal click behavior for submitting answers
+                            submitBtn.onclick = function() {
+                                submitTrivia(riddleNumber);
+                            };
+                        } else {
+                            submitText.textContent =
+                                "All Enhanced Guesses Used";
+                            guessStatus.innerHTML = `Maximum enhanced guesses reached <span class="guess-count">3/3</span>`;
+                            submitBtn.disabled = true;
+                            submitBtn.style.opacity = "0.5";
+                            submitBtn.style.background = "#94a3b8";
+                            submitBtn.style.cursor = "not-allowed";
+                        }
+                    } else {
+                        // Free user logic
+                        if (guessCount === 0) {
+                            submitText.textContent =
+                                "Submit Free Guess (3 SHSY)";
+                            guessStatus.textContent =
+                                "Free guess: 3 SHSY reward";
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "1";
+                            submitBtn.style.background =
+                                "linear-gradient(135deg, #00ddeb, #046bd2)";
+                            submitBtn.style.cursor = "pointer";
+                            
+                            // Reset normal click behavior for submitting answers
+                            submitBtn.onclick = function() {
+                                submitTrivia(riddleNumber);
+                            };
+                        } else {
+                            submitText.textContent =
+                                "Pay $4 USDT for More Guesses";
+                            guessStatus.innerHTML = `Free guess used. Pay $4 USDT for 10 SHSY rewards <span class="guess-count">1/1</span>`;
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "1";
+                            submitBtn.style.background =
+                                "linear-gradient(135deg, #ff6b6b, #ee5a24)";
+                            submitBtn.style.cursor = "pointer";
+                            
+                            // Override the click behavior to handle USDT deposit
+                            submitBtn.onclick = function() {
+                                handleUSDTDepositClick(riddleNumber);
+                            };
+                        }
+                    }
+                }
+            }
+
+            async function submitTrivia(riddleNumber) {
+                if (!currentWallet || !walletAddress) {
+                    showNotification(
+                        "Connect Wallet",
+                        "Please connect your wallet to submit answers and earn rewards",
+                        "info",
+                    );
+                    return;
+                }
+
+                const answerInput = document.getElementById(
+                    `riddleAnswer${riddleNumber}`,
+                );
+                const answer = answerInput.value.trim();
+
+                if (!answer) {
+                    showNotification(
+                        "Enter Answer",
+                        "Please enter an answer before submitting",
+                        "error",
+                    );
+                    return;
+                }
+
+                if (currentRiddles.length < riddleNumber) {
+                    showNotification(
+                        "No Riddle",
+                        "No active riddle available to submit",
+                        "error",
+                    );
+                    return;
+                }
+
+                const currentRiddle = currentRiddles[riddleNumber - 1];
+                const riddleId = currentRiddle._id;
+                const guessCount = riddleGuessCount[riddleId] || 0;
+                const isPaid = riddlePaidStatus[riddleId] || false;
+
+                // Check if user has reached maximum guesses
+                if (guessCount >= 3) {
+                    showNotification(
+                        "Maximum Guesses Reached",
+                        "You have used all 3 guesses for this riddle",
+                        "error",
+                    );
+                    return;
+                }
+
+                // Check if user needs to pay for additional guesses
+                if (!isPaid && guessCount >= 1) {
+                    showNotification(
+                        "Payment Required",
+                        "Pay $4 USDT to unlock 3 total guesses with 10 SHSY rewards per correct answer!",
+                        "info",
+                    );
+                    return;
+                }
+
+                const submitBtn = document.getElementById(
+                    `submitTrivia${riddleNumber}`,
+                );
+                const submitText = document.getElementById(
+                    `submitText${riddleNumber}`,
+                );
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.5";
+                if (submitText) {
+                    submitText.textContent = "Submitting...";
+                }
+
+                try {
+                    // Determine reward amount based on guess type
+                    const isFreeguess = guessCount === 0;
+                    const expectedReward = isFreeguess ? 3 : 10; // 3 SHSY for free, 10 SHSY for paid
+
+                    console.log(
+                        `Submitting trivia answer "${answer}" for riddle ${riddleId} from wallet: ${walletAddress} (Guess ${guessCount + 1}/3, Paid: ${isPaid})`,
+                    );
+
+                    const response = await fetch("/api/riddles/submit", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            walletAddress: walletAddress,
+                            answer: answer,
+                            riddleId: riddleId,
+                            isPaidGuess: isPaid,
+                            guessNumber: guessCount + 1,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Update guess count
+                        riddleGuessCount[riddleId] = guessCount + 1;
+
+                        // Show appropriate notification based on actual payment status
+                        const actualReward = isPaid ? 10 : 3;
+                        const rewardMessage = isPaid
+                            ? `You earned ${actualReward} SHSY tokens with your enhanced guess!`
+                            : `You earned ${actualReward} SHSY tokens with your free guess!`;
+
+                        showNotification(
+                            "Answer Submitted!",
+                            `${rewardMessage}`,
+                            "success",
+                        );
+
+                        // Reset trivia form
+                        answerInput.value = "";
+
+                        // Re-enable the button first
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = "1";
+
+                        // Update button state immediately
+                        updateSubmitButton(riddleNumber);
+
+                        // Update deposit prompts to show $4 USDT button after first guess (if not paid)
+                        if (!isPaid) {
+                            // Reload existing guess data to update payment status
+                            await loadExistingGuessData();
+                            checkUSDTDepositStatus();
+                        }
+
+                        // Update stats to reflect the reward
+                        await loadDashboardData();
+                    } else {
+                        showNotification(
+                            "Submission Error",
+                            data.error || "Failed to submit answer",
+                            "error",
+                        );
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = "1";
+                        updateSubmitButton(riddleNumber);
+                    }
+                } catch (error) {
+                    console.error("Error submitting trivia:", error);
+                    showNotification(
+                        "Network Error",
+                        "Failed to submit answer. Please try again.",
+                        "error",
+                    );
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = "1";
+                    updateSubmitButton(riddleNumber);
+                }
+            }
+
+            // Load existing guess data for the user
+            async function loadExistingGuessData() {
+                if (!currentWallet || !walletAddress) {
+                    return;
+                }
+
+                try {
+                    // Check USDT deposit status first
+                    const usdtResponse = await fetch(
+                        `/api/million-pool/check-deposit?walletAddress=${walletAddress}`,
+                    );
+                    const usdtData = await usdtResponse.json();
+
+                    if (usdtData.success && usdtData.hasDeposited) {
+                        // User has paid $4 USDT, so all riddles have paid status
+                        currentRiddles.forEach((riddle) => {
+                            riddlePaidStatus[riddle.id] = true;
+                        });
+                    }
+
+                    // Get user's riddle submissions
+                    const submissionsResponse = await fetch(
+                        `/api/user/riddle-submissions?walletAddress=${walletAddress}`,
+                    );
+                    const submissionsData = await submissionsResponse.json();
+
+                    if (submissionsData.success) {
+                        // Count submissions per riddle
+                        currentRiddles.forEach((riddle) => {
+                            const riddleSubmissions =
+                                submissionsData.submissions.filter(
+                                    (s) => s.riddleId === riddle.id,
+                                );
+                            riddleGuessCount[riddle.id] =
+                                riddleSubmissions.length;
+                        });
+                    }
+
+                    console.log("Loaded existing guess data:", {
+                        guessCount: riddleGuessCount,
+                        paidStatus: riddlePaidStatus,
+                    });
+
+                    // Update button states
+                    updateSubmitButton(1);
+                    updateSubmitButton(2);
+                } catch (error) {
+                    console.error("Error loading existing guess data:", error);
+                }
+            }
+
+            // Wallet connection functions
+            async function connectWallet() {
+                try {
+                    let provider;
+                    let walletName;
+
+                    // Check for Phantom wallet first
+                    if (window.solana && window.solana.isPhantom) {
+                        provider = window.solana;
+                        walletName = "Phantom";
+                        console.log("Detected Phantom wallet");
+                    }
+                    // Check for Solflare wallet
+                    else if (window.solflare) {
+                        provider = window.solflare;
+                        walletName = "Solflare";
+                        console.log("Detected Solflare wallet");
+                    }
+                    // Check for generic Solana wallet
+                    else if (window.solana) {
+                        provider = window.solana;
+                        walletName = "Solana Wallet";
+                        console.log("Detected generic Solana wallet");
+                    } else {
+                        alert(
+                            "No Solana wallet found. Please install Phantom, Solflare, or another Solana wallet extension.",
+                        );
+                        return;
+                    }
+
+                    // Connect to the wallet
+                    const response = await provider.connect();
+                    console.log("Wallet connection response:", response);
+
+                    // Handle different wallet response formats
+                    let publicKey;
+                    if (response && response.publicKey) {
+                        publicKey = response.publicKey;
+                    } else if (provider.publicKey) {
+                        publicKey = provider.publicKey;
+                    } else {
+                        throw new Error(
+                            "No public key found in wallet response",
+                        );
+                    }
+
+                    walletAddress = publicKey.toString();
+                    walletConnected = true;
+                    currentWallet = walletAddress; // Store the actual wallet address, not wallet name
+
+                    // Update UI
+                    updateWalletUI();
+
+                    // Show progress bars and load challenge data
+                    showProgressContent();
+                    updateTriviaVisibility();
+                    loadChallengeProgress();
+
+                    // Load existing guess counts and payment status
+                    await loadExistingGuessData();
+
+                    // Check USDT deposit status and show deposit button if needed
+                    await checkUSDTDepositStatus();
+
+                    console.log(`Connected to ${walletName}:`, walletAddress);
+                    console.log(`Current wallet set to:`, currentWallet);
+                } catch (error) {
+                    console.error("Failed to connect wallet:", error);
+                    alert("Failed to connect wallet. Please try again.");
+                }
+            }
+
+            async function disconnectWallet() {
+                try {
+                    if (currentWallet === "Phantom" && window.solana) {
+                        await window.solana.disconnect();
+                    } else if (
+                        currentWallet === "Solflare" &&
+                        window.solflare
+                    ) {
+                        await window.solflare.disconnect();
+                    }
+
+                    walletConnected = false;
+                    walletAddress = null;
+                    currentWallet = null;
+                    selectedTriviaAnswer = null; // Reset selected answer when disconnecting
+
+                    // Update UI
+                    updateWalletUI();
+                    hideProgressContent();
+                    updateTriviaVisibility();
+
+                    // Reset trivia selections
+                    document
+                        .querySelectorAll("#triviaContent .option")
+                        .forEach((opt) => {
+                            opt.style.borderColor = "#e2e8f0";
+                            opt.style.background = "white";
+                            opt.classList.remove("selected");
+                        });
+
+                    console.log("Wallet disconnected");
+                } catch (error) {
+                    console.error("Failed to disconnect wallet:", error);
+                }
+            }
+
+            function updateWalletUI() {
+                const connectBtn = document.getElementById("connectWallet");
+                const walletInfo = document.getElementById("walletInfo");
+                const walletAddressSpan =
+                    document.getElementById("walletAddress");
+                const stakeButton = document.getElementById("stakeButton");
+
+                if (walletConnected && walletAddress) {
+                    connectBtn.style.display = "none";
+                    walletInfo.style.display = "flex";
+                    walletAddressSpan.textContent = `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
+
+                    // Enable staking functionality
+                    stakeButton.disabled = false;
+                    stakeButton.textContent = "Stake Tokens";
+
+                    // Load SHSY balance
+                    loadSHSYBalance();
+                } else {
+                    connectBtn.style.display = "block";
+                    walletInfo.style.display = "none";
+                    walletAddressSpan.textContent = "Not Connected";
+
+                    // Disable staking functionality
+                    stakeButton.disabled = true;
+                    stakeButton.textContent = "Connect Wallet to Stake";
+
+                    // Reset balance display
+                    document.getElementById("walletBalance").textContent =
+                        "Connect wallet to view";
+                }
+            }
+
+            // Load SHSY token balance
+            async function loadSHSYBalance() {
+                try {
+                    const response = await fetch(
+                        `/api/balance/shsy?walletAddress=${walletAddress}`,
+                    );
+                    const data = await response.json();
+
+                    if (data.success) {
+                        document.getElementById("walletBalance").textContent =
+                            `${data.balance} SHSY`;
+                    } else {
+                        document.getElementById("walletBalance").textContent =
+                            "0 SHSY";
+                    }
+                } catch (error) {
+                    console.error("Error loading SHSY balance:", error);
+                    document.getElementById("walletBalance").textContent =
+                        "Error loading balance";
+                }
+            }
+
+            function showProgressContent() {
+                document.getElementById("walletConnectPrompt").style.display =
+                    "none";
+                document.getElementById("progressContent").style.display =
+                    "grid";
+            }
+
+            function hideProgressContent() {
+                document.getElementById("walletConnectPrompt").style.display =
+                    "block";
+                document.getElementById("progressContent").style.display =
+                    "none";
+            }
+
+            async function loadChallengeProgress() {
+                if (!walletConnected || !walletAddress) {
+                    console.log(
+                        "No wallet connected, skipping challenge progress load",
+                    );
+                    return;
+                }
+
+                console.log(
+                    "Loading challenge progress for wallet:",
+                    walletAddress,
+                );
+
+                try {
+                    // Load global challenges
+                    console.log("Fetching global challenges...");
+                    const challengeResponse = await fetch(
+                        `/api/dapp/challenges/${walletAddress}`,
+                    );
+                    console.log(
+                        "Challenge response status:",
+                        challengeResponse.status,
+                    );
+
+                    if (challengeResponse.ok) {
+                        const challengeData = await challengeResponse.json();
+                        console.log("Challenge data:", challengeData);
+                        updateChallengeProgress(challengeData.challenges || []);
+                    } else {
+                        console.error(
+                            "Failed to load challenges:",
+                            challengeResponse.status,
+                            challengeResponse.statusText,
+                        );
+                        // Set default values for challenges
+                        updateChallengeProgress([]);
+                    }
+
+                    // Load million pool status
+                    console.log("Fetching million pool status...");
+                    const millionResponse = await fetch(
+                        `/api/dapp/million-pool/status/${walletAddress}`,
+                    );
+                    console.log(
+                        "Million pool response status:",
+                        millionResponse.status,
+                    );
+
+                    if (millionResponse.ok) {
+                        const millionData = await millionResponse.json();
+                        console.log("Million pool data:", millionData);
+                        updateMillionPoolProgress(millionData);
+                    } else {
+                        console.error(
+                            "Failed to load million pool status:",
+                            millionResponse.status,
+                            millionResponse.statusText,
+                        );
+                        // Set default values for million pool
+                        updateMillionPoolProgress({ success: false });
+                    }
+                } catch (error) {
+                    console.error("Error loading challenge progress:", error);
+                    // Set default values on error
+                    updateChallengeProgress([]);
+                    updateMillionPoolProgress({ success: false });
+                }
+            }
+
+            function updateChallengeProgress(challenges) {
+                console.log("All challenges received:", challenges);
+                const challenge10d = challenges.find(
+                    (c) => c.challengeType === "10_day",
+                );
+                const challenge30d = challenges.find(
+                    (c) => c.challengeType === "30_day",
+                );
+
+                console.log("10-day challenge data:", challenge10d);
+                console.log("30-day challenge data:", challenge30d);
+
+                // Update 10-day challenge
+                if (challenge10d) {
+                    const progress10d =
+                        challenge10d.progress?.progressPercentage || 0;
+                    document.getElementById("challenge10d").style.width =
+                        `${progress10d}%`;
+
+                    let status = "Not Started";
+                    if (
+                        challenge10d.status === "active" ||
+                        challenge10d.status === "running"
+                    ) {
+                        if (challenge10d.isParticipating) {
+                            status = `${Math.round(progress10d)}% Complete`;
+                        } else {
+                            status = "Not Eligible";
+                        }
+                    } else if (challenge10d.status === "completed") {
+                        status = "Ready to Claim!";
+                    } else if (challenge10d.status === "claimed") {
+                        status = "Claimed";
+                    }
+                    console.log(
+                        `10d challenge status: ${challenge10d.status} -> ${status}`,
+                    );
+                    document.getElementById("status10d").textContent = status;
+                } else {
+                    document.getElementById("challenge10d").style.width = "0%";
+                    document.getElementById("status10d").textContent =
+                        "Not Started";
+                }
+
+                // Update 30-day challenge
+                if (challenge30d) {
+                    const progress30d =
+                        challenge30d.progress?.progressPercentage || 0;
+                    document.getElementById("challenge30d").style.width =
+                        `${progress30d}%`;
+
+                    let status = "Not Started";
+                    if (
+                        challenge30d.status === "active" ||
+                        challenge30d.status === "running"
+                    ) {
+                        if (challenge30d.isParticipating) {
+                            status = `${Math.round(progress30d)}% Complete`;
+                        } else {
+                            status = "Not Eligible";
+                        }
+                    } else if (challenge30d.status === "completed") {
+                        status = "Ready to Claim!";
+                    } else if (challenge30d.status === "claimed") {
+                        status = "Claimed";
+                    }
+                    console.log(
+                        `30d challenge status: ${challenge30d.status} -> ${status}`,
+                    );
+                    document.getElementById("status30d").textContent = status;
+                } else {
+                    document.getElementById("challenge30d").style.width = "0%";
+                    document.getElementById("status30d").textContent =
+                        "Not Started";
+                }
+            }
+
+            function updateMillionPoolProgress(millionData) {
+                console.log("Million pool data received:", millionData);
+
+                if (
+                    millionData.success &&
+                    millionData.participant &&
+                    millionData.timing
+                ) {
+                    const participant = millionData.participant;
+                    const timing = millionData.timing;
+
+                    // Use the calculated progress percentage from timing
+                    const progress = timing.progressPercentage || 0;
+
+                    let status = "Not Participating";
+                    if (participant.participationType === "shsy_stake") {
+                        status = `Active (100+ SHSY) - ${Math.round(progress)}%`;
+                    } else if (participant.participationType === "usdt") {
+                        status = `Active ($4 USDT) - ${Math.round(progress)}%`;
+                    }
+
+                    document.getElementById("millionPool").style.width =
+                        `${progress}%`;
+                    document.getElementById("statusMillion").textContent =
+                        status;
+
+                    console.log(
+                        `Million pool progress: ${progress}% (${status})`,
+                    );
+                } else {
+                    document.getElementById("millionPool").style.width = "0%";
+                    document.getElementById("statusMillion").textContent =
+                        "Not Participating";
+                }
+            }
+
+            // Load real dashboard data
+            async function loadDashboardData() {
+                try {
+                    const response = await fetch("/api/dapp/stats");
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        // Update stats with real data from DApp stats format
+                        if (data.success && data.stats) {
+                            const stats = data.stats;
+                            if (stats.totalStaked) {
+                                document.getElementById(
+                                    "totalStaked",
+                                ).textContent =
+                                    `${parseFloat(stats.totalStaked).toLocaleString()} SHSY`;
+                            }
+                            if (stats.totalRewards) {
+                                document.getElementById(
+                                    "totalRewards",
+                                ).textContent = `${stats.totalRewards} SHSY`;
+                            }
+                            // Use placeholder data for referral and guess rewards for now
+                            document.getElementById(
+                                "referralRewards",
+                            ).textContent = "20 SHSY";
+                            document.getElementById(
+                                "guessRewards",
+                            ).textContent = "69.5 SHSY";
+                        }
+                    }
+                } catch (error) {
+                    console.log("Using demo data - could not load real stats");
+                }
+            }
+
+            // Event listeners
+            document
+                .getElementById("connectWallet")
+                .addEventListener("click", connectWallet);
+            document
+                .getElementById("disconnectWallet")
+                .addEventListener("click", disconnectWallet);
+
+            // Initialize on page load
+            function initializeDashboard() {
+                console.log("Initializing dashboard...");
+                console.log(
+                    "Solana Web3 available:",
+                    typeof solanaWeb3 !== "undefined",
+                );
+                console.log(
+                    "Window.solana available:",
+                    typeof window.solana !== "undefined",
+                );
+                console.log(
+                    "Window.solflare available:",
+                    typeof window.solflare !== "undefined",
+                );
+
+                updateWalletUI();
+                hideProgressContent();
+                updateTriviaVisibility();
+                loadDashboardData();
+                loadStakingPools(); // Load staking pools on initialization
+            }
+
+            function showNotification(title, message, type = "success") {
+                const notification = document.getElementById("notification");
+                const titleEl = document.getElementById("notificationTitle");
+                const messageEl = document.getElementById(
+                    "notificationMessage",
+                );
+
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+
+                // Set color based on type
+                if (type === "error") {
+                    notification.style.background = "#ef4444";
+                } else if (type === "info") {
+                    notification.style.background = "#3b82f6";
+                } else {
+                    notification.style.background = "#10b981";
+                }
+
+                notification.style.display = "block";
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    notification.style.display = "none";
+                }, 5000);
+            }
+
+            function updateTriviaVisibility() {
+                // Handle both riddle sections - always show riddles but control interaction
+                for (let i = 1; i <= 2; i++) {
+                    const submitBtn = document.getElementById(
+                        `submitTrivia${i}`,
+                    );
+                    const answerInput = document.getElementById(
+                        `riddleAnswer${i}`,
+                    );
+                    const submitText = document.getElementById(
+                        `submitText${i}`,
+                    );
+
+                    if (currentWallet && walletAddress) {
+                        // Enable interaction when wallet connected
+                        answerInput.disabled = false;
+                        answerInput.style.cursor = "text";
+                        answerInput.style.opacity = "1";
+                        answerInput.placeholder = "Type your answer here...";
+
+                        submitBtn.disabled = false;
+                        submitBtn.style.cursor = "pointer";
+                        submitBtn.style.opacity = "1";
+
+                        // Add event listener for input changes
+                        answerInput.addEventListener("input", () =>
+                            updateSubmitButton(i),
+                        );
+
+                        // Update submit button text and functionality
+                        updateSubmitButton(i);
+                    } else {
+                        // Disable interaction when wallet not connected
+                        answerInput.disabled = true;
+                        answerInput.style.cursor = "not-allowed";
+                        answerInput.style.opacity = "0.6";
+                        answerInput.placeholder =
+                            "Connect wallet to submit answers...";
+                        answerInput.value = "";
+
+                        submitBtn.disabled = true;
+                        submitBtn.style.cursor = "not-allowed";
+                        submitBtn.style.opacity = "0.6";
+
+                        if (submitText) {
+                            submitText.textContent = "Connect Wallet to Submit";
+                        }
+                    }
+                }
+
+                // Always load riddles to show them, regardless of wallet connection
+                loadRiddles();
+
+                // Initialize deposit prompts - hide them initially until conditions are met
+                initializeDepositPrompts();
+            }
+
+
+
+            // Load data on page load with small delay for wallet detection
+            setTimeout(initializeDashboard, 100);
+        </script>
+    </body>
+</html>
