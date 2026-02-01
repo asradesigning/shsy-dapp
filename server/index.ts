@@ -5569,9 +5569,9 @@ async function startServer() {
       console.log("Continuing with server startup...");
     }
 
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5173;
 
-    app.listen(PORT, "0.0.0.0", () => {
+    app.listen(PORT, 5173, () => {
       console.log(`Staking Platform server running on port ${PORT}`);
       console.log("Access your platform at:");
       console.log("- User Dashboard: http://localhost:5000/dashboard");
